@@ -1,0 +1,37 @@
+<h1>My Articles</h1>
+
+<a href="{% url 'add_article' %}">Add an article</a>
+
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
+
+<form method="get" action="">
+    <input type="text" name="q" placeholder="Search articles" value="{{ query }}" />
+    <button type="submit">Search</button>
+</form>
+
+<div>
+    Filter:
+    <a href="?status=">All</a>
+    <a href="?status=Unread">Unread</a>
+    <a href="?status=Read">Read</a>
+    <a href="?status=Archived">Archived</a>
+</div>
+
+<div>
+    Tags:
+    {% for tag in tags %}
+        <a href="?tag={{ tag.slug }}">{{ tag.name }}</a>
+    {% endfor %}
+</div>
+
+{% for article in articles %}
+    <p>{{ article.title }}</p>
+    <p>{{ article.status }}</p>
+    <p>
+        {% for tag in article.tags.all %}
+            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+{% endfor %}

@@ -2,10 +2,11 @@ import requests
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from .forms import AddArticleForm
-from .models import Article
+from .models import Article, Tag
 from .services import fetch_article_metadata
 
 
@@ -26,8 +27,36 @@ def add_article(request):
                     messages.warning(request, "You've already saved that article.")
                 else:
                     messages.success(request, "Article saved.")
-                    return redirect("add_article")
+                    return redirect("list_articles")
     else:
         form = AddArticleForm()
 
     return render(request, "read_it_later/add_article.html", {"form": form})
+
+
+@login_required
+def article_list(request):
+    articles = Article.objects.filter(user=request.user)
+
+    status = request.GET.get("status")
+    if status:
+        articles = articles.filter(status=status)
+
+    tag_slug = request.GET.get('tag')
+    if tag_slug:
+        articles = articles.filter(tags__slug=tag_slug)
+
+
+    query = request.GET.get('q')
+    if query:
+        articles = articles.filter(
+            Q(title__icontains=query) | Q(description__icontains=query) | Q(url__icontains=query)
+        )
+
+    return render(request, 'read_it_later/article_list.html', {
+        'articles': articles,
+        'tags': Tag.objects.all(),
+        'current_status': status or '',
+        'current_tag': tag_slug or '',
+        'query': query or '',
+    })

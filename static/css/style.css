@@ -1,0 +1,222 @@
+:root {
+    --color-bg: #fafafa;
+    --color-surface: #ffffff;
+    --color-text: #1a1a1a;
+    --color-muted: #6b6b6b;
+    --color-border: #e2e2e2;
+    --color-primary: #2563eb;
+    --color-primary-dark: #1d4ed8;
+    --color-danger: #dc2626;
+    --color-success: #15803d;
+    --color-warning: #92400e;
+    --radius: 6px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+}
+
+h1 {
+    font-size: 1.75rem;
+    margin: 0 0 1rem;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.site-nav a {
+    font-weight: 600;
+}
+
+/* Forms */
+form {
+    margin: 0 0 1rem;
+}
+
+form p {
+    margin: 0 0 0.75rem;
+}
+
+input[type="text"],
+input[type="url"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+button,
+input[type="submit"] {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: var(--color-primary-dark);
+}
+
+.btn-danger {
+    background: var(--color-danger);
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.inline-form {
+    display: inline-block;
+    margin: 0;
+}
+
+/* Messages */
+.messages {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+}
+
+.messages li {
+    padding: 0.65rem 0.9rem;
+    border-radius: var(--radius);
+    margin-bottom: 0.5rem;
+    background: var(--color-border);
+    font-size: 0.9rem;
+}
+
+.messages li.success {
+    background: #dcfce7;
+    color: var(--color-success);
+}
+
+.messages li.error {
+    background: #fee2e2;
+    color: var(--color-danger);
+}
+
+.messages li.warning {
+    background: #fef3c7;
+    color: var(--color-warning);
+}
+
+/* Filters / tags */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.filters .label {
+    color: var(--color-muted);
+    font-weight: 600;
+}
+
+.tag-pill {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: var(--color-border);
+    font-size: 0.8rem;
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+/* Article list */
+.article-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.9rem;
+}
+
+.article-card h2 {
+    font-size: 1.1rem;
+    margin: 0 0 0.35rem;
+}
+
+.article-meta {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    background: #e0e7ff;
+    color: #3730a3;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Article detail */
+.article-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    margin: 1rem 0;
+}
+
+.article-body {
+    margin-top: 1.5rem;
+}
+
+.article-body p {
+    margin: 0 0 1rem;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}

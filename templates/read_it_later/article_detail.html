@@ -1,19 +1,30 @@
-<p><a href="{% url 'list_articles' %}">&larr; Back to my articles</a></p>
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'list_articles' %}">&larr; Back to my articles</a>
 
 <h1>{{ article.title }}</h1>
 
-<p><a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">View original source</a></p>
+<div class="article-meta">
+    <span class="status-badge">{{ article.status }}</span>
+    <span>{{ article.reading_time_minutes }} min read</span>
+    <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">View original source</a>
+</div>
 
 <form method="post" action="{% url 'article_delete' article.pk %}" onsubmit="return confirm('Delete this article?');">
     {% csrf_token %}
-    <button type="submit">Delete</button>
+    <button type="submit" class="btn-danger">Delete</button>
 </form>
 
 {% if article.image_url %}
-    <img src="{{ article.image_url }}" alt="" style="max-width: 100%; height: auto;">
+    <img class="article-image" src="{{ article.image_url }}" alt="">
 {% endif %}
 
 <p>{{ article.description }}</p>
-<p>{{ article.reading_time_minutes }} min read</p>
 
-<div>{{ article.content_text|linebreaks }}</div>
+<div class="article-body">
+    {{ article.content_text|linebreaks }}
+</div>
+{% endblock %}

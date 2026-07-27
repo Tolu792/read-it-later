@@ -1,47 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}My Articles{% endblock %}
+
+{% block content %}
 <h1>My Articles</h1>
-
-<a href="{% url 'add_article' %}">Add an article</a>
-
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Log out</button>
-</form>
-
-
-{% for message in messages %}
-    <p>{{ message }}</p>
-{% endfor %}
 
 <form method="get" action="">
     <input type="text" name="q" placeholder="Search articles" value="{{ query }}" />
     <button type="submit">Search</button>
 </form>
 
-<div>
-    Filter:
+<div class="filters">
+    <span class="label">Filter:</span>
     <a href="?status=">All</a>
     <a href="?status=Unread">Unread</a>
     <a href="?status=Read">Read</a>
     <a href="?status=Archived">Archived</a>
 </div>
 
-<div>
-    Tags:
+<div class="filters">
+    <span class="label">Tags:</span>
     {% for tag in tags %}
-        <a href="?tag={{ tag.slug }}">{{ tag.name }}</a>
+        <a class="tag-pill" href="?tag={{ tag.slug }}">{{ tag.name }}</a>
     {% endfor %}
 </div>
 
 {% for article in articles %}
-    <p><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></p>
-    <p>{{ article.status }}</p>
-    <p>
-        {% for tag in article.tags.all %}
-            {{ tag.name }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </p>
-    <form method="post" action="{% url 'article_delete' article.pk %}" onsubmit="return confirm('Delete this article?');">
-        {% csrf_token %}
-        <button type="submit">Delete</button>
-    </form>
+    <div class="article-card">
+        <h2><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></h2>
+        <div class="article-meta">
+            <span class="status-badge">{{ article.status }}</span>
+            {% for tag in article.tags.all %}
+                <span class="tag-pill">{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+        <form method="post" action="{% url 'article_delete' article.pk %}" class="inline-form" onsubmit="return confirm('Delete this article?');">
+            {% csrf_token %}
+            <button type="submit" class="btn-danger">Delete</button>
+        </form>
+    </div>
+{% empty %}
+    <p>No articles yet.</p>
 {% endfor %}
+{% endblock %}

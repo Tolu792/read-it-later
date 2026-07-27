@@ -1,6 +1,8 @@
 import requests
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import redirect, render, get_object_or_404
@@ -9,6 +11,19 @@ from django.views.decorators.http import require_POST
 from .forms import AddArticleForm
 from .models import Article, Tag
 from .services import fetch_article_metadata
+
+
+def signup(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("list_articles")
+    else:
+        form = UserCreationForm()
+
+    return render(request, "registration/signup.html", {"form": form})
 
 
 @login_required

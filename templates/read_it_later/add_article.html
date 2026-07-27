@@ -1,0 +1,11 @@
+<h1>Save an article</h1>
+
+{% for message in messages %}
+  <p>{{ message }}</p>
+{% endfor %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit">Save</button>
+</form>

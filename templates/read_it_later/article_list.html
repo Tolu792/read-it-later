@@ -33,7 +33,7 @@
 </div>
 
 {% for article in articles %}
-    <p>{{ article.title }}</p>
+    <p><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></p>
     <p>{{ article.status }}</p>
     <p>
         {% for tag in article.tags.all %}

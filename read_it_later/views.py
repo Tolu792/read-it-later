@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import Q
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 from .forms import AddArticleForm
 from .models import Article, Tag
@@ -60,3 +60,9 @@ def article_list(request):
         'current_tag': tag_slug or '',
         'query': query or '',
     })
+
+
+@login_required
+def article_detail(request, pk):
+    article = get_object_or_404(Article, pk=pk, user=request.user)
+    return render(request, "read_it_later/article_detail.html", {"article": article})

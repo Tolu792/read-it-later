@@ -1,0 +1,12 @@
+<h1>{{ article.title }}</h1>
+
+<p><a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">View original source</a></p>
+
+{% if article.image_url %}
+    <img src="{{ article.image_url }}" alt="" style="max-width: 100%; height: auto;">
+{% endif %}
+
+<p>{{ article.description }}</p>
+<p>{{ article.reading_time_minutes }} min read</p>
+
+<div>{{ article.content_text }}</div>

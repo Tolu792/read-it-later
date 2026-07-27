@@ -40,4 +40,8 @@
             {{ tag.name }}{% if not forloop.last %}, {% endif %}
         {% endfor %}
     </p>
+    <form method="post" action="{% url 'article_delete' article.pk %}" onsubmit="return confirm('Delete this article?');">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
 {% endfor %}

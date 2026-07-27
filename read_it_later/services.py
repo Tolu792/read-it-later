@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import trafilatura
 
 
 def _get_meta(soup, key):
@@ -30,14 +31,14 @@ def fetch_article_metadata(url: str) -> dict:
     description = _get_meta(soup, "og:description") or _get_meta(soup, "description")
     image_url = _get_meta(soup, "og:image")
 
-    body_text = " ".join(p.get_text() for p in soup.find_all("p"))
-    word_count = len(body_text.split())
+    content_text = trafilatura.extract(response.text, url=url) or ""
+    word_count = len(content_text.split())
     reading_time_minutes = max(1, round(word_count / 200))
 
     return {
         "title": title or "",
         "description": description or "",
         "image_url": image_url or "",
-        "content_text": body_text,
+        "content_text": content_text,
         "reading_time_minutes": reading_time_minutes,
     }

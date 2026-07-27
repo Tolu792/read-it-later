@@ -1,6 +1,13 @@
+<p><a href="{% url 'list_articles' %}">&larr; Back to my articles</a></p>
+
 <h1>{{ article.title }}</h1>
 
 <p><a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">View original source</a></p>
+
+<form method="post" action="{% url 'article_delete' article.pk %}" onsubmit="return confirm('Delete this article?');">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+</form>
 
 {% if article.image_url %}
     <img src="{{ article.image_url }}" alt="" style="max-width: 100%; height: auto;">
@@ -9,4 +16,4 @@
 <p>{{ article.description }}</p>
 <p>{{ article.reading_time_minutes }} min read</p>
 
-<div>{{ article.content_text }}</div>
+<div>{{ article.content_text|linebreaks }}</div>

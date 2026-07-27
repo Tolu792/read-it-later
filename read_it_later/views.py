@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.http import require_POST
 
 from .forms import AddArticleForm
 from .models import Article, Tag
@@ -66,3 +67,12 @@ def article_list(request):
 def article_detail(request, pk):
     article = get_object_or_404(Article, pk=pk, user=request.user)
     return render(request, "read_it_later/article_detail.html", {"article": article})
+
+
+@login_required
+@require_POST
+def article_delete(request, pk):
+    article = get_object_or_404(Article, pk=pk, user=request.user)
+    article.delete()
+    messages.success(request, "Article deleted.")
+    return redirect("list_articles")

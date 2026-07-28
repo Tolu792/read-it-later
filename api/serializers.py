@@ -21,6 +21,6 @@ class ArticleSerializer(serializers.ModelSerializer):
             'tags', 'created_at',
         ]
         read_only_fields = [
-            'url','title', 'description', 'image_url',
+            'title', 'description', 'image_url',
             'content_text', 'reading_time_minutes', 'created_at',
         ]

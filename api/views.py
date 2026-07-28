@@ -31,6 +31,11 @@ class ArticleViewSet(viewsets.ModelViewSet):
         except IntegrityError:
             raise ValidationError({'url': "You have already saved that article."})
 
+    def perform_update(self, serializer):
+        if 'url' in serializer.validated_data:
+            raise ValidationError({'url': "URL cannot be changed after creation."})
+        serializer.save()
+
 
 class RevokeTokenView(APIView):
     permission_classes = [permissions.IsAuthenticated]

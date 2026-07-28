@@ -11,7 +11,7 @@ from django.http import Http404
 
 from .forms import AddArticleForm
 from .models import Article, Tag
-from .services import fetch_article_metadata
+from .services import fetch_article_metadata, filter_articles
 
 
 def signup(request):
@@ -53,22 +53,11 @@ def add_article(request):
 
 @login_required
 def article_list(request):
-    articles = Article.objects.filter(user=request.user)
+    articles = filter_articles(Article.objects.filter(user=request.user), request.GET)
 
     status = request.GET.get("status")
-    if status:
-        articles = articles.filter(status=status)
-
     tag_slug = request.GET.get('tag')
-    if tag_slug:
-        articles = articles.filter(tags__slug=tag_slug)
-
-
     query = request.GET.get('q')
-    if query:
-        articles = articles.filter(
-            Q(title__icontains=query) | Q(description__icontains=query) | Q(url__icontains=query)
-        )
 
     return render(request, 'read_it_later/article_list.html', {
         'articles': articles,

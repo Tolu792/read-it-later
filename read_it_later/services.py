@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import trafilatura
+from django.db.models import Q
 
 
 def _get_meta(soup, key):
@@ -42,3 +43,22 @@ def fetch_article_metadata(url: str) -> dict:
         "content_text": content_text,
         "reading_time_minutes": reading_time_minutes,
     }
+
+
+def filter_articles(articles, params):
+    status = params.get('status')
+    if status:
+        articles = articles.filter(status=status)
+
+    tag_slug = params.get('tag')
+    if tag_slug:
+        articles = articles.filter(tags__slug=tag_slug)
+
+
+    query = params.get('q')
+    if query:
+        articles = articles.filter(
+            Q(title__icontains=query) | Q(description__icontains=query) | Q(url__icontains=query)
+        )
+
+    return articles

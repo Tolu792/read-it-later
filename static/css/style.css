@@ -141,6 +141,31 @@ input[type="submit"]:hover {
     color: var(--color-warning);
 }
 
+.status-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+}
+
+.status-actions button {
+    background: var(--color-border);
+    color: var(--color-text);
+}
+
+.status-actions button:hover {
+    background: #d4d4d4;
+}
+
+.status-actions button.btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+}
+
+.status-actions button.btn-danger:hover {
+    background: #b91c1c;
+}
+
 /* Filters / tags */
 .filters {
     display: flex;

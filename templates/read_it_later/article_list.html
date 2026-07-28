@@ -34,10 +34,30 @@
                 <span class="tag-pill">{{ tag.name }}</span>
             {% endfor %}
         </div>
-        <form method="post" action="{% url 'article_delete' article.pk %}" class="inline-form" onsubmit="return confirm('Delete this article?');">
-            {% csrf_token %}
-            <button type="submit" class="btn-danger">Delete</button>
-        </form>
+        <div class="status-actions">
+            {% if article.status != 'Unread' %}
+            <form method="post" action="{% url 'article_set_status' article.pk 'Unread' %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit">Mark Unread</button>
+            </form>
+            {% endif %}
+            {% if article.status != 'Read' %}
+            <form method="post" action="{% url 'article_set_status' article.pk 'Read' %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit">Mark Read</button>
+            </form>
+            {% endif %}
+            {% if article.status != 'Archived' %}
+            <form method="post" action="{% url 'article_set_status' article.pk 'Archived' %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit">Archive</button>
+            </form>
+            {% endif %}
+            <form method="post" action="{% url 'article_delete' article.pk %}" class="inline-form" onsubmit="return confirm('Delete this article?');">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger">Delete</button>
+            </form>
+        </div>
     </div>
 {% empty %}
     <p>No articles yet.</p>

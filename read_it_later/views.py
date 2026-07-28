@@ -7,6 +7,7 @@ from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_POST
+from django.http import Http404
 
 from .forms import AddArticleForm
 from .models import Article, Tag
@@ -90,4 +91,17 @@ def article_delete(request, pk):
     article = get_object_or_404(Article, pk=pk, user=request.user)
     article.delete()
     messages.success(request, "Article deleted.")
+    return redirect("list_articles")
+
+
+@login_required
+@require_POST
+def article_set_status(request, pk, status):
+    if status not in Article.Status.values:
+        raise Http404
+
+    article = get_object_or_404(Article, pk=pk, user=request.user)
+    article.status = status
+    article.save(update_fields=["status"])
+    messages.success(request, f"Marked as {article.get_status_display()}.")
     return redirect("list_articles")

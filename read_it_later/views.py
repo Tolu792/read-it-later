@@ -1,4 +1,3 @@
-import requests
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -11,7 +10,8 @@ from django.http import Http404
 
 from .forms import AddArticleForm
 from .models import Article, Tag
-from .services import fetch_article_metadata, filter_articles
+from .services import filter_articles
+from .tasks import fetch_and_populate_article
 
 
 def signup(request):
@@ -34,17 +34,13 @@ def add_article(request):
         if form.is_valid():
             url = form.cleaned_data["url"]
             try:
-                metadata = fetch_article_metadata(url)
-            except requests.RequestException:
-                messages.error(request, "Couldn't fetch that URL. Check the link and try again.")
+                article = Article.objects.create(user=request.user, url=url)
+            except IntegrityError:
+                messages.warning(request, "You've already saved that article.")
             else:
-                try:
-                    Article.objects.create(user=request.user, url=url, **metadata)
-                except IntegrityError:
-                    messages.warning(request, "You've already saved that article.")
-                else:
-                    messages.success(request, "Article saved.")
-                    return redirect("list_articles")
+                fetch_and_populate_article.delay(article.id)
+                messages.success(request, "Article saved. Fetching details...")
+                return redirect("list_articles")
     else:
         form = AddArticleForm()
 

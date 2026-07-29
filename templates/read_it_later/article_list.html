@@ -26,8 +26,8 @@
 </div>
 
 {% for article in articles %}
-    <div class="article-card">
-        <h2><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></h2>
+    <div class="article-card" {% if not article.title %}data-pending="true"{% endif %}>
+        <h2><a href="{% url 'article_detail' article.pk %}">{{ article.title|default:"Fetching details..." }}</a></h2>
         <div class="article-meta">
             <span class="status-badge">{{ article.status }}</span>
             {% for tag in article.tags.all %}
@@ -62,4 +62,17 @@
 {% empty %}
     <p>No articles yet.</p>
 {% endfor %}
+
+<script>
+(function () {
+    if (!document.querySelector('[data-pending="true"]')) {
+        sessionStorage.removeItem('ril_pending_retries');
+        return;
+    }
+    var retries = parseInt(sessionStorage.getItem('ril_pending_retries') || '0', 10);
+    if (retries >= 10) return;
+    sessionStorage.setItem('ril_pending_retries', retries + 1);
+    setTimeout(function () { location.reload(); }, 2000);
+})();
+</script>
 {% endblock %}

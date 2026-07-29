@@ -5,11 +5,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 
 from read_it_later.models import Article
-from read_it_later.services import fetch_article_metadata, filter_articles
+from read_it_later.services import filter_articles
+from read_it_later.tasks import fetch_and_populate_article
 from .serializers import ArticleSerializer
 
 from django.db import IntegrityError
-import requests
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
@@ -21,15 +21,11 @@ class ArticleViewSet(viewsets.ModelViewSet):
         return filter_articles(articles, self.request.query_params)
 
     def perform_create(self, serializer):
-        url = serializer.validated_data['url']
         try:
-            metadata = fetch_article_metadata(url)
-        except requests.RequestException:
-            raise ValidationError({'url': "Couldn't fetch that URL."})
-        try:
-            serializer.save(user=self.request.user, **metadata)
+            article = serializer.save(user=self.request.user)
         except IntegrityError:
             raise ValidationError({'url': "You have already saved that article."})
+        fetch_and_populate_article.delay(article.id)
 
     def perform_update(self, serializer):
         if 'url' in serializer.validated_data:

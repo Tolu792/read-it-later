@@ -26,8 +26,18 @@
 </div>
 
 {% for article in articles %}
-    <div class="article-card" {% if not article.title %}data-pending="true"{% endif %}>
-        <h2><a href="{% url 'article_detail' article.pk %}">{{ article.title|default:"Fetching details..." }}</a></h2>
+    <div class="article-card" {% if not article.title and not article.fetch_failed %}data-pending="true"{% endif %}>
+        <h2>
+            <a href="{% url 'article_detail' article.pk %}">
+                {% if article.fetch_failed %}Couldn't fetch article details{% else %}{{ article.title|default:"Fetching details..." }}{% endif %}
+            </a>
+        </h2>
+        {% if article.fetch_failed %}
+            <p class="fetch-error">
+                We couldn't automatically fetch this article.
+                <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">View original source</a> instead.
+            </p>
+        {% endif %}
         <div class="article-meta">
             <span class="status-badge">{{ article.status }}</span>
             {% for tag in article.tags.all %}

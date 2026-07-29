@@ -15,6 +15,8 @@ def fetch_and_populate_article(article_id):
     try:
         metadata = fetch_article_metadata(article.url)
     except requests.RequestException:
+        article.fetch_failed = True
+        article.save(update_fields=["fetch_failed"])
         return
 
     for field, value in metadata.items():

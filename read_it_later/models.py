@@ -33,6 +33,7 @@ class Article(models.Model):
     description = models.CharField(max_length=300, blank=True)
     content_text = models.TextField(blank=True)
     reading_time_minutes = models.PositiveIntegerField(default=0)
+    fetch_failed = models.BooleanField(default=False)
     status = models.CharField(choices=Status.choices, default=Status.UNREAD)
     tags = models.ManyToManyField(Tag, blank=True, related_name='articles')
     created_at = models.DateTimeField(auto_now_add=True)

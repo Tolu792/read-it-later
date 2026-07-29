@@ -17,10 +17,10 @@ class ArticleSerializer(serializers.ModelSerializer):
         model = Article
         fields = [
             'id', 'url', 'title', 'description', 'image_url',
-            'content_text', 'reading_time_minutes', 'status',
+            'content_text', 'reading_time_minutes', 'fetch_failed', 'status',
             'tags', 'created_at',
         ]
         read_only_fields = [
             'title', 'description', 'image_url',
-            'content_text', 'reading_time_minutes', 'created_at',
+            'content_text', 'reading_time_minutes', 'fetch_failed', 'created_at',
         ]

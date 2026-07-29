@@ -5,7 +5,14 @@
 {% block content %}
 <a class="back-link" href="{% url 'list_articles' %}">&larr; Back to my articles</a>
 
-<h1>{{ article.title }}</h1>
+<h1>{% if article.fetch_failed %}Couldn't fetch article details{% else %}{{ article.title|default:"Fetching details..." }}{% endif %}</h1>
+
+{% if article.fetch_failed %}
+    <p class="fetch-error">
+        We couldn't automatically fetch this article's content.
+        <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">View the original source</a> instead.
+    </p>
+{% endif %}
 
 <div class="article-meta">
     <span class="status-badge">{{ article.status }}</span>

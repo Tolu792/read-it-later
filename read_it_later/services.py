@@ -18,6 +18,12 @@ def _text(tag):
     return None
 
 
+def _strip_html(text):
+    if not text:
+        return text
+    return BeautifulSoup(text, "lxml").get_text(separator=" ", strip=True)
+
+
 def fetch_article_metadata(url: str) -> dict:
     response = requests.get(
         url,
@@ -28,8 +34,8 @@ def fetch_article_metadata(url: str) -> dict:
 
     soup = BeautifulSoup(response.text, "lxml")
 
-    title = _get_meta(soup, "og:title") or _text(soup.title)
-    description = _get_meta(soup, "og:description") or _get_meta(soup, "description")
+    title = _strip_html(_get_meta(soup, "og:title") or _text(soup.title))
+    description = _strip_html(_get_meta(soup, "og:description") or _get_meta(soup, "description"))
     image_url = _get_meta(soup, "og:image")
 
     content_text = trafilatura.extract(response.text, url=url) or ""

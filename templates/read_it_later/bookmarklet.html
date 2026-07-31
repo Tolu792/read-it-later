@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Bookmarklet{% endblock %}
+
+{% block content %}
+<h1>Save to Read It Later</h1>
+
+<p>Drag this link to your bookmarks bar. Click it on any page to save that page to your list.</p>
+
+<p><a href="{{ bookmarklet_href }}">&#128204; Save to Read It Later</a></p>
+
+<p>This bookmarklet is tied to your account's API token. If you ever revoke your token, you'll need to reinstall it to get a new one.</p>
+{% endblock %}

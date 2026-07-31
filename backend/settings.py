@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

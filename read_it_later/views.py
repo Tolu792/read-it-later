@@ -1,3 +1,6 @@
+import json
+from urllib.parse import quote
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -7,6 +10,7 @@ from django.db.models import Q
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.http import Http404
+from rest_framework.authtoken.models import Token
 
 from .forms import AddArticleForm
 from .models import Article, Tag
@@ -102,3 +106,25 @@ def article_update_tags(request, pk):
     article.tags.set(get_or_create_tags(tag_names))
     messages.success(request, "Tags updated.")
     return redirect("article_detail", pk=pk)
+
+
+@login_required
+def bookmarklet(request):
+    token, _ = Token.objects.get_or_create(user=request.user)
+    api_url = request.build_absolute_uri('/api/articles/')
+
+    js_code = (
+        "(function(){"
+        "var t=%s;var u=%s;"
+        "fetch(u,{method:'POST',headers:{'Authorization':'Token '+t,'Content-Type':'application/json'},"
+        "body:JSON.stringify({url:window.location.href})})"
+        ".then(function(r){return r.json().then(function(d){return{s:r.status,d:d};});})"
+        ".then(function(res){if(res.s===201){alert('Saved to Read It Later!');}"
+        "else{alert('Error: '+JSON.stringify(res.d));}})"
+        ".catch(function(e){alert('Network error: '+e);});"
+        "})();"
+    ) % (json.dumps(token.key), json.dumps(api_url))
+
+    return render(request, "read_it_later/bookmarklet.html", {
+        "bookmarklet_href": "javascript:" + quote(js_code),
+    })

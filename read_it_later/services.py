@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import trafilatura
 from django.db.models import Q
+from .models import Tag
 
 
 def _get_meta(soup, key):
@@ -68,3 +69,14 @@ def filter_articles(articles, params):
         )
 
     return articles
+
+
+def get_or_create_tags(names):
+    tags = []
+    for name in names:
+        name = name.strip()
+        if not name:
+            continue
+        tag, _ = Tag.objects.get_or_create(name=name)
+        tags.append(tag)
+    return tags

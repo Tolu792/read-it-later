@@ -12,13 +12,14 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
+    tag_names = serializers.ListField(child=serializers.CharField(), write_only=True, required=False)
 
     class Meta:
         model = Article
         fields = [
             'id', 'url', 'title', 'description', 'image_url',
             'content_text', 'reading_time_minutes', 'fetch_failed', 'status',
-            'tags', 'created_at',
+            'tags', 'tag_names' ,'created_at',
         ]
         read_only_fields = [
             'title', 'description', 'image_url',

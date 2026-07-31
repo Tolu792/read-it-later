@@ -45,6 +45,21 @@
     </form>
 </div>
 
+<div class="article-meta">
+    {% for tag in article.tags.all %}
+        <span class="tag-pill">{{ tag.name }}</span>
+    {% empty %}
+        <span class="label">No tags yet</span>
+    {% endfor %}
+</div>
+
+<form method="post" action="{% url 'article_update_tags' article.pk %}">
+    {% csrf_token %}
+    <input type="text" name="tags" placeholder="Comma-separated tags"
+           value="{% for tag in article.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+    <button type="submit">Save Tags</button>
+</form>
+
 {% if article.image_url %}
     <img class="article-image" src="{{ article.image_url }}" alt="">
 {% endif %}

@@ -10,7 +10,7 @@ from django.http import Http404
 
 from .forms import AddArticleForm
 from .models import Article, Tag
-from .services import filter_articles
+from .services import filter_articles, get_or_create_tags
 from .tasks import fetch_and_populate_article
 
 
@@ -35,6 +35,8 @@ def add_article(request):
             url = form.cleaned_data["url"]
             try:
                 article = Article.objects.create(user=request.user, url=url)
+                tag_names = form.cleaned_data['tags'].split(',')
+                article.tags.set(get_or_create_tags(tag_names))
             except IntegrityError:
                 messages.warning(request, "You've already saved that article.")
             else:
@@ -90,3 +92,13 @@ def article_set_status(request, pk, status):
     article.save(update_fields=["status"])
     messages.success(request, f"Marked as {article.get_status_display()}.")
     return redirect("list_articles")
+
+
+@login_required
+@require_POST
+def article_update_tags(request, pk):
+    article = get_object_or_404(Article, pk=pk, user=request.user)
+    tag_names = request.POST.get('tags', '').split(',')
+    article.tags.set(get_or_create_tags(tag_names))
+    messages.success(request, "Tags updated.")
+    return redirect("article_detail", pk=pk)

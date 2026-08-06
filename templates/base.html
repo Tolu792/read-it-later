@@ -33,5 +33,51 @@
 
         {% block content %}{% endblock %}
     </div>
+
+    <div id="confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <p id="confirm-modal-message">Are you sure?</p>
+            <div class="modal-actions">
+                <button type="button" id="confirm-modal-cancel">Cancel</button>
+                <button type="button" id="confirm-modal-confirm" class="btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        var pendingForm = null;
+        var modal = document.getElementById('confirm-modal');
+        var message = document.getElementById('confirm-modal-message');
+        var cancelBtn = document.getElementById('confirm-modal-cancel');
+        var confirmBtn = document.getElementById('confirm-modal-confirm');
+
+        window.confirmDelete = function (form, text) {
+            pendingForm = form;
+            message.textContent = text || 'Are you sure?';
+            modal.style.display = 'flex';
+            return false;
+        };
+
+        cancelBtn.addEventListener('click', function () {
+            pendingForm = null;
+            modal.style.display = 'none';
+        });
+
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                pendingForm = null;
+                modal.style.display = 'none';
+            }
+        });
+
+        confirmBtn.addEventListener('click', function () {
+            modal.style.display = 'none';
+            if (pendingForm) {
+                pendingForm.submit();
+            }
+        });
+    })();
+    </script>
 </body>
 </html>

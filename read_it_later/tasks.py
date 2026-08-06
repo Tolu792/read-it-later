@@ -16,9 +16,15 @@ def fetch_and_populate_article(article_id):
         metadata = fetch_article_metadata(article.url)
     except requests.RequestException:
         article.fetch_failed = True
-        article.save(update_fields=["fetch_failed"])
+        try:
+            article.save(update_fields=["fetch_failed"])
+        except Article.NotUpdated:
+            pass  # article was deleted while the fetch was in flight
         return
 
     for field, value in metadata.items():
         setattr(article, field, value)
-    article.save()
+    try:
+        article.save(update_fields=list(metadata.keys()))
+    except Article.NotUpdated:
+        pass  # article was deleted while the fetch was in flight

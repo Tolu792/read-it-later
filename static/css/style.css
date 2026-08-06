@@ -254,3 +254,33 @@ input[type="submit"]:hover {
     margin-bottom: 1rem;
     font-size: 0.9rem;
 }
+
+/* Confirm modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    max-width: 320px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-box p {
+    margin: 0 0 1.25rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}

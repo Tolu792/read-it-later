@@ -73,3 +73,36 @@ Interactive docs are at `/api/schema/swagger-ui/`.
 ## Bookmarklet
 
 Once logged in, visit `/bookmarklet/` and drag the link to your bookmarks bar. Clicking it on any page saves that page to your list.
+
+## Deployment
+
+Deployed on [Render](https://render.com)'s free tier as a single Web Service. Render has no free Background Worker plan, so `start.sh` runs the Celery worker in the background of the same dyno as gunicorn instead of as a separate service - it sleeps and wakes with the dyno, which is fine for low personal traffic.
+
+Free-tier services this relies on:
+
+- **[Upstash](https://upstash.com)** - free Redis instance, used as the Celery broker/result backend
+- **[Neon](https://neon.tech)** - free Postgres instance (Render's own free Postgres auto-deletes after 30 days, so the app doesn't use it)
+
+Build command:
+
+```
+pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+```
+
+Start command:
+
+```
+bash start.sh
+```
+
+Environment variables to set on Render:
+
+| Variable | Value |
+|---|---|
+| `SECRET_KEY` | a fresh, random secret key |
+| `DEBUG` | `False` |
+| `ALLOWED_HOSTS` | your `*.onrender.com` hostname |
+| `CSRF_TRUSTED_ORIGINS` | `https://your-app.onrender.com` |
+| `DATABASE_URL` | the Neon connection string |
+| `CELERY_BROKER_URL` | the Upstash `rediss://` connection string |
+| `CELERY_RESULT_BACKEND` | same as `CELERY_BROKER_URL` |

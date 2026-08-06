@@ -13,10 +13,12 @@ click-plugins==1.1.1.2
 click-repl==0.3.0
 courlan==1.4.0
 dateparser==1.4.1
+dj-database-url==3.0.1
 Django==6.0.7
 django-cors-headers==4.9.0
 djangorestframework==3.17.1
 drf-spectacular==0.30.0
+gunicorn==23.0.0
 htmldate==1.10.0
 idna==3.18
 inflection==0.5.1
@@ -28,6 +30,8 @@ lxml==6.1.1
 lxml_html_clean==0.4.5
 packaging==26.2
 prompt_toolkit==3.0.53
+psycopg==3.2.10
+psycopg-binary==3.2.10
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 pytz==2026.3.post1
@@ -49,3 +53,4 @@ uritemplate==4.2.0
 urllib3==2.7.0
 vine==5.1.0
 wcwidth==0.8.2
+whitenoise==6.11.0
